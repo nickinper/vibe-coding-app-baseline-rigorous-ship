@@ -1,0 +1,15 @@
+{
+  "project_name": "Default Deliverable",
+  "owner_name": "Team",
+  "intent_one_liner": "Baseline deliverable generation in CI",
+  "audience": "Internal reviewers",
+  "deliverables": "report,web,api",
+  "experience_level": "advanced",
+  "mode": "expert",
+  "team_size": "2",
+  "timeline_weeks": "6",
+  "region": "us",
+  "contains_pii": "no",
+  "payments": "no",
+  "device_specs": "CI"
+}

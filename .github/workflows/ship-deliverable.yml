@@ -34,6 +34,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+
+      # Prepare CI answers for deterministic builds
+      # Uses answers.ci.json as fallback when answers.json doesn't exist
+      # This keeps the repo clean while providing CI with reliable input
+      - name: Prepare CI answers
+        run: |
+          if [ ! -f answers.json ] && [ -f answers.ci.json ]; then
+            cp answers.ci.json answers.json
+            echo "✓ Using answers.ci.json for CI build"
+          elif [ -f answers.json ]; then
+            echo "✓ Using existing answers.json"
+          else
+            echo "✗ No answers file found (missing both answers.json and answers.ci.json)"
+            exit 1
+          fi
       - name: Install deps
         run: npm ci || npm install
       - name: Ship pipeline
