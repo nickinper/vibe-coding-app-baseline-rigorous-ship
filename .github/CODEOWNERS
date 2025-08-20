@@ -1,0 +1,5 @@
+# Critical guardrails — require review from @nickinper
+/rules/*.json      @nickinper
+/templates/*.md    @nickinper
+/.github/workflows/*.yml  @nickinper
+/scripts/*.js      @nickinper
