@@ -1,0 +1,1 @@
+Task: Validate answers, generate deliverable, export HTML/PDF/Notion, optionally ship to GitHub/local.

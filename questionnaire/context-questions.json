@@ -1,0 +1,56 @@
+{
+  "questions": [
+    {
+      "id": "project_name",
+      "text": "Project name?"
+    },
+    {
+      "id": "owner_name",
+      "text": "Your name (owner)?"
+    },
+    {
+      "id": "intent_one_liner",
+      "text": "One-line description of what you want to build:"
+    },
+    {
+      "id": "audience",
+      "text": "Who is it for (audience)?"
+    },
+    {
+      "id": "deliverables",
+      "text": "Deliverables (comma-separated: web,api,mobile,agent,etl,report)?"
+    },
+    {
+      "id": "experience_level",
+      "text": "Experience level (novice/intermediate/advanced)?"
+    },
+    {
+      "id": "mode",
+      "text": "Mode (novice/expert) or leave blank to auto-detect:"
+    },
+    {
+      "id": "team_size",
+      "text": "Team size (number)?"
+    },
+    {
+      "id": "timeline_weeks",
+      "text": "Timeline (weeks)?"
+    },
+    {
+      "id": "region",
+      "text": "Primary data region (us/eu/other)?"
+    },
+    {
+      "id": "contains_pii",
+      "text": "Contains PII? (yes/no)?"
+    },
+    {
+      "id": "payments",
+      "text": "Will you process payments? (yes/no)?"
+    },
+    {
+      "id": "device_specs",
+      "text": "Device specs (OS/CPU/RAM/GPU)? (optional)"
+    }
+  ]
+}

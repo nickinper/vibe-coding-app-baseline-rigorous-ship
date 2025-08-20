@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "project_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "owner_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "intent_one_liner": {
+      "type": "string",
+      "minLength": 3
+    },
+    "audience": {
+      "type": "string"
+    },
+    "deliverables": {
+      "type": "string"
+    },
+    "experience_level": {
+      "type": "string",
+      "enum": [
+        "novice",
+        "intermediate",
+        "advanced"
+      ]
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "novice",
+        "expert"
+      ]
+    },
+    "team_size": {
+      "type": [
+        "string",
+        "number"
+      ]
+    },
+    "timeline_weeks": {
+      "type": [
+        "string",
+        "number"
+      ]
+    },
+    "region": {
+      "type": "string",
+      "enum": [
+        "us",
+        "eu",
+        "other"
+      ]
+    },
+    "contains_pii": {
+      "type": "string"
+    },
+    "payments": {
+      "type": "string"
+    },
+    "device_specs": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "project_name",
+    "owner_name",
+    "intent_one_liner",
+    "deliverables",
+    "experience_level",
+    "region"
+  ]
+}

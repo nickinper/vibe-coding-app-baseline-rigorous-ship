@@ -1,0 +1,54 @@
+{
+  "template_selection": [
+    {
+      "if": {
+        "mode": "expert"
+      },
+      "use": "report_expert.md"
+    },
+    {
+      "if": {
+        "experience_level": "advanced"
+      },
+      "use": "report_expert.md"
+    },
+    {
+      "if": {
+        "default": true
+      },
+      "use": "report_novice.md"
+    }
+  ],
+  "inclusions": [
+    {
+      "if": {
+        "payments": true
+      },
+      "add": "PCI Note: Use hosted checkout (e.g., Stripe Checkout) to stay in SAQ-A scope.\n"
+    },
+    {
+      "if": {
+        "contains_pii": true
+      },
+      "add": "GDPR/CCPA: Add consent, retention policy, and DPA with vendors.\n"
+    },
+    {
+      "if": {
+        "region": "eu"
+      },
+      "add": "EU Residency: Ensure databases and analytics are EU-hosted; add SCCs if needed.\n"
+    },
+    {
+      "if": {
+        "team_size_max": 2
+      },
+      "add": "Small Team: Prefer managed services to reduce operational load.\n"
+    },
+    {
+      "if": {
+        "timeline_weeks_max": 8
+      },
+      "add": "Tight Timeline: Defer non-essentials to Phase 2; focus on core ACs.\n"
+    }
+  ]
+}

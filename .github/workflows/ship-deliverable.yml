@@ -1,0 +1,56 @@
+name: ship-deliverable
+on:
+  workflow_dispatch:
+    inputs:
+      export_to_github:
+        description: "Commit deliverables to 'deliverable' branch"
+        required: false
+        default: "true"
+        type: choice
+        options: ["true", "false"]
+      export_to_notion:
+        description: "Push to Notion (requires secrets)"
+        required: false
+        default: "false"
+        type: choice
+        options: ["true", "false"]
+permissions:
+  contents: read
+concurrency:
+  group: ship-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  ship:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_OWNER: ${{ github.repository_owner }}
+      GITHUB_REPO: ${{ github.event.repository.name }}
+      GITHUB_BRANCH: deliverable
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN || github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install deps
+        run: npm ci || npm install
+      - name: Ship pipeline
+        run: npm run ship
+        env:
+          NOTION_TOKEN: ${{ inputs.export_to_notion == 'true' && secrets.NOTION_TOKEN || '' }}
+          NOTION_PARENT_PAGE_ID: ${{ inputs.export_to_notion == 'true' && secrets.NOTION_PARENT_PAGE_ID || '' }}
+      - name: Upload artifacts (21-day retention)
+        uses: actions/upload-artifact@v4
+        with:
+          name: deliverables
+          path: |
+            outputs/generated-deliverable.md
+            outputs/generated-deliverable.html
+            outputs/generated-deliverable.pdf
+            outputs/manifest.json
+          retention-days: 21
+      - name: Export to GitHub branch (optional)
+        if: ${{ inputs.export_to_github == 'true' }}
+        run: node scripts/export-github.js outputs docs

@@ -1,0 +1,29 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Vibe: Validate Answers",
+      "type": "shell",
+      "command": "npm run validate:answers",
+      "group": "build"
+    },
+    {
+      "label": "Vibe: Generate Deliverable",
+      "type": "shell",
+      "command": "npm run gen",
+      "group": "build"
+    },
+    {
+      "label": "Vibe: Export HTML",
+      "type": "shell",
+      "command": "npm run export:html",
+      "group": "build"
+    },
+    {
+      "label": "Vibe: Export PDF",
+      "type": "shell",
+      "command": "npm run export:pdf",
+      "group": "build"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "vibe-coding-app-baseline",
+  "version": "0.2.0",
+  "private": true,
+  "type": "commonjs",
+  "description": "Professional deliverable generator (Novice/Expert) with rules engine and exporters; hardened ship pipeline.",
+  "license": "MIT",
+  "bin": {
+    "vibe": "cli/vibe-cli.js",
+    "vibe-build": "cli/deliverable-builder.js"
+  },
+  "scripts": {
+    "start": "node cli/vibe-cli.js",
+    "build:deliverable": "node cli/deliverable-builder.js",
+    "gen": "npm run start && npm run build:deliverable",
+    "validate:answers": "node scripts/validate-answers.js",
+    "export:html": "node scripts/export-html.js",
+    "export:pdf": "node scripts/export-pdf.js",
+    "export:notion": "node scripts/export-notion.js",
+    "export:github": "node scripts/export-github.js outputs docs",
+    "export:local": "node scripts/export-local.js ../export-target",
+    "ship": "node scripts/ship.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "marked": "^12.0.2",
+    "@notionhq/client": "^2.2.14",
+    "puppeteer": "^22.15.0",
+    "@octokit/rest": "^20.1.1"
+  }
+}
