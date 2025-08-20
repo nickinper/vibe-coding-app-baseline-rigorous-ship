@@ -1,5 +1,5 @@
 # Default Deliverable — technical due diligence
-owner: Team • date: 2025-08-20 • trace: 1qlvnkwr
+owner: Team • date: 2025-08-20 • trace: jt9vuwn5
 
 ## 1. intent & constraints
 - intent: Baseline deliverable generation in CI
