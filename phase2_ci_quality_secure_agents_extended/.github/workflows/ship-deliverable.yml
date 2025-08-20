@@ -1,4 +1,5 @@
 name: ship-deliverable
+
 on:
   workflow_dispatch:
     inputs:
@@ -19,62 +20,73 @@ on:
 
 permissions:
   contents: read
+
 concurrency:
   group: ship-${{ github.ref }}
   cancel-in-progress: true
+
 jobs:
   ship:
     permissions:
       contents: write
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        config: 
-          - { name: "standard", answers: "answers.ci.json" }
-          - { name: "enterprise", answers: "answers.enterprise.ci.json" }
+        answers_file: [ "answers.ci.json", "answers.enterprise.ci.json" ]
+
     env:
       GITHUB_OWNER: ${{ github.repository_owner }}
       GITHUB_REPO: ${{ github.event.repository.name }}
       GITHUB_BRANCH: deliverable
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN || github.token }}
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
-      - name: Prepare CI answers
+      - name: Prepare CI answers (matrix)
         run: |
-          if [ ! -f answers.json ] && [ -f "${{ matrix.config.answers }}" ]; then
-            cp "${{ matrix.config.answers }}" answers.json
-            echo "✓ Using ${{ matrix.config.answers }} for CI build (${{ matrix.config.name }})"
-          elif [ -f answers.json ]; then
-            echo "✓ Using existing answers.json"
+          if [ -f "${{ matrix.answers_file }}" ]; then
+            cp "${{ matrix.answers_file }}" answers.json
+            echo "✓ Using ${{ matrix.answers_file }}"
+          elif [ -f "answers.ci.json" ]; then
+            cp answers.ci.json answers.json
+            echo "✓ Fallback to answers.ci.json"
           else
-            echo "✗ No answers file found (missing both answers.json and ${{ matrix.config.answers }})"
-            exit 1
+            echo "✗ No answers file available"; exit 1
           fi
+
+      - name: Install deps
+        run: npm ci || npm install
 
       - name: Verify agent policies
         run: node scripts/verify-agent-policy.js
-      - name: Install deps
-        run: npm ci || npm install
+
       - name: Ship pipeline
         run: npm run ship
         env:
           NOTION_TOKEN: ${{ inputs.export_to_notion == 'true' && secrets.NOTION_TOKEN || '' }}
           NOTION_PARENT_PAGE_ID: ${{ inputs.export_to_notion == 'true' && secrets.NOTION_PARENT_PAGE_ID || '' }}
-      - name: Upload artifacts (21-day retention)
+
+      - name: Verify artifact integrity
+        run: node scripts/verify-artifacts.js
+
+      - name: Upload artifacts (matrix, 21-day retention)
         uses: actions/upload-artifact@v4
         with:
-          name: deliverables-${{ matrix.config.name }}
+          name: deliverables-${{ matrix.answers_file }}
           path: |
             outputs/generated-deliverable.md
             outputs/generated-deliverable.html
             outputs/generated-deliverable.pdf
             outputs/manifest.json
           retention-days: 21
-      - name: Export to GitHub branch (optional)
-        if: ${{ inputs.export_to_github == 'true' && matrix.config.name == 'standard' }}
+
+      - name: Export to GitHub branch (only for default answers set)
+        if: ${{ inputs.export_to_github == 'true' && matrix.answers_file == 'answers.ci.json' }}
         run: node scripts/export-github.js outputs docs

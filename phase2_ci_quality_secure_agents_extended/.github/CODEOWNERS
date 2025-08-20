@@ -1,0 +1,4 @@
+/rules/*.json   @nickinper
+/templates/*.md @nickinper
+/.github/workflows/*.yml @nickinper
+/scripts/*.js   @nickinper
