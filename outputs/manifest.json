@@ -1,0 +1,27 @@
+{
+  "trace_id": "rwkhx2yi",
+  "timestamp": "2025-08-20T20:54:55.816Z",
+  "env": {
+    "node_version": "v20.19.4",
+    "platform": "linux"
+  },
+  "artifacts": {
+    "md": {
+      "path": "outputs/generated-deliverable.md",
+      "size": 1586,
+      "sha256": "05bf06bbc4f45fb57ffae0fef62c2250bafde29e2f9cf2c39d872b99324ba6e7"
+    },
+    "html": {
+      "path": "outputs/generated-deliverable.html",
+      "size": 2247,
+      "sha256": "3f603f3a7745ef7e99be6d54303617bfc858c2b8309148c87a45de16fe90fff4"
+    },
+    "pdf": {
+      "path": "outputs/generated-deliverable.pdf",
+      "size": 44814,
+      "sha256": "e05c9126cb0ac6bcd84469571496c24a528990d837356da28c834b7602439c80"
+    }
+  },
+  "template_selection": "auto via rules; see templates/report_*.md",
+  "rules_applied_hint": "See rules/rules.json and inputs in answers.json"
+}
