@@ -25,7 +25,30 @@ export SHIP_LOCAL_DIR=../my-workspace
 ```
 Artifacts end up in `outputs/` with a `manifest.json` (trace ID, hashes, sizes).
 
-## What’s inside
+## 🔒 Enterprise Security (Phase 2)
+- **Agent Policy Verification**: Deny-by-default networking, capability manifests
+- **Network Allowlisting**: Centralized control with desktop UI management
+- **Pre-commit Hooks**: Automated security policy enforcement
+- **Performance Profiling**: LeCun-Rigor standards with regression testing
+- **Enterprise Overrides**: Controlled policy exceptions with expiry
+- **Matrix CI**: Standard + enterprise configuration testing
+
+### Security Commands
+```bash
+# Agent policy verification
+node scripts/verify-agent-policy.js
+
+# Network allowlist UI (desktop management)
+UI_ADMIN_TOKEN=<secret> PORT=5173 node scripts/net-allowlist-ui.js
+
+# Performance profiling & regression tests
+node scripts/performance-profile.js
+
+# Enable pre-commit hooks
+git config core.hooksPath .githooks
+```
+
+## What's inside
 - `templates/report_novice.md`, `templates/report_expert.md`
 - `rules/rules.json` (auto-inclusions: PII, payments, EU, small team, tight timeline)
 - `questionnaire/*.json` (questions + schema)
