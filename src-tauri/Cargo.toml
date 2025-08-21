@@ -7,15 +7,12 @@ license = "MIT"
 repository = ""
 edition = "2021"
 
-[lib]
-name = "vibe_coding_app_desktop"
-crate-type = ["cdylib", "rlib"]
 
 [build-dependencies]
 tauri-build = { version = "2.0", features = [] }
 
 [dependencies]
-tauri = { version = "2.0", features = ["devtools", "shell-open"] }
+tauri = { version = "2.0", features = ["devtools"] }
 tauri-plugin-shell = "2.0"
 tauri-plugin-fs = "2.0"
 serde = { version = "1.0", features = ["derive"] }

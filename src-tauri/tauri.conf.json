@@ -3,10 +3,8 @@
   "version": "0.2.0",
   "identifier": "com.vibecodingapp.desktop",
   "build": {
-    "targets": "all",
     "beforeDevCommand": "",
     "beforeBuildCommand": "",
-    "devUrl": "http://localhost:3000",
     "frontendDist": "../dist"
   },
   "app": {
@@ -33,7 +31,6 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
     "category": "DeveloperTool",
     "copyright": "Copyright © 2025 Nicolas K. Perkins",
     "shortDescription": "Enterprise Secure Deliverable Generator",
@@ -45,7 +42,6 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "identifier": "com.vibecodingapp.desktop",
     "resources": [],
     "externalBin": [],
     "publisher": "Nicolas K. Perkins",
