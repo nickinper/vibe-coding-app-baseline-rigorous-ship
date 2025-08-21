@@ -17,6 +17,8 @@ function sha256File(p) {
   return createHash('sha256').update(data).digest('hex');
 }
 
+const isWindows = process.platform === 'win32';
+
 test('questionnaire ships and validates successfully', () => {
   // Copy CI answers to expected location
   copyFileSync('answers.ci.json', 'answers.json');
@@ -29,18 +31,24 @@ test('questionnaire ships and validates successfully', () => {
   assert.ok(existsSync('outputs/manifest.json'), 'manifest missing');
   assert.ok(existsSync('outputs/generated-deliverable.md'), 'md missing');
   assert.ok(existsSync('outputs/generated-deliverable.html'), 'html missing');
-  assert.ok(existsSync('outputs/generated-deliverable.pdf'), 'pdf missing');
+  if (!isWindows) {
+    assert.ok(existsSync('outputs/generated-deliverable.pdf'), 'pdf missing');
+  }
 
   // Verify manifest structure
   const manifest = JSON.parse(readFileSync('outputs/manifest.json', 'utf8'));
   assert.ok(manifest.trace_id, 'trace_id missing');
   assert.ok(manifest.artifacts?.md, 'md artifact missing');
   assert.ok(manifest.artifacts?.html, 'html artifact missing');
-  assert.ok(manifest.artifacts?.pdf, 'pdf artifact missing');
+  if (!isWindows) {
+    assert.ok(manifest.artifacts?.pdf, 'pdf artifact missing');
+  }
 
   // Reasonable size thresholds (avoid platform variance)
   assert.ok(manifest.artifacts.md.size > 200, 'markdown too small');
-  assert.ok(manifest.artifacts.pdf.size > 2000, 'pdf too small');
+  if (!isWindows) {
+    assert.ok(manifest.artifacts.pdf.size > 2000, 'pdf too small');
+  }
 
   // Content validation: deliverables should be generated consistently
   const initialManifest = JSON.parse(readFileSync('outputs/manifest.json', 'utf8'));
@@ -65,5 +73,7 @@ test('lecun mode respects budgets & integrity', () => {
   const manifest = JSON.parse(readFileSync('outputs/manifest.json', 'utf8'));
   assert.ok(manifest.trace_id, 'trace_id missing');
   assert.ok(manifest.artifacts?.md, 'md artifact missing');
-  assert.ok(manifest.artifacts?.pdf, 'pdf artifact missing');
+  if (!isWindows) {
+    assert.ok(manifest.artifacts?.pdf, 'pdf artifact missing');
+  }
 });

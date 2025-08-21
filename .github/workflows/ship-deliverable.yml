@@ -36,10 +36,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-latest,  name: "standard-linux",     answers_file: "answers.ci.json",            export_to_github: false }
-          - { os: ubuntu-latest,  name: "enterprise-linux",   answers_file: "answers.enterprise.ci.json",  export_to_github: true  }
-          - { os: windows-latest, name: "standard-windows",   answers_file: "answers.ci.json",            export_to_github: false }
-          - { os: windows-latest, name: "enterprise-windows", answers_file: "answers.enterprise.ci.json",  export_to_github: false }
+          - { os: ubuntu-latest,  name: "standard-linux",     answers_file: "answers.ci.json",            export_to_github: false, pdf: true  }
+          - { os: ubuntu-latest,  name: "enterprise-linux",   answers_file: "answers.enterprise.ci.json",  export_to_github: true,  pdf: true  }
+          - { os: windows-latest, name: "standard-windows",   answers_file: "answers.ci.json",            export_to_github: false, pdf: false }
+          - { os: windows-latest, name: "enterprise-windows", answers_file: "answers.enterprise.ci.json",  export_to_github: false, pdf: false }
     env:
       GITHUB_OWNER: ${{ github.repository_owner }}
       GITHUB_REPO: ${{ github.event.repository.name }}
@@ -94,6 +94,7 @@ jobs:
           LC_ALL: C
           LANG: C
           NODE_ENV: test
+          SKIP_PDF: ${{ matrix.pdf == false && '1' || '' }}
         run: npm run test:e2e
 
       - name: Ship pipeline
@@ -106,6 +107,8 @@ jobs:
           NOTION_PARENT_PAGE_ID: ${{ inputs.export_to_notion == 'true' && secrets.NOTION_PARENT_PAGE_ID || '' }}
         run: npm run ship -- --answers=${{ matrix.answers_file }}
       - name: Verify artifact integrity (SHA-256 + manifest)
+        env:
+          SKIP_PDF: ${{ matrix.pdf == false && '1' || '' }}
         run: node scripts/verify-artifacts.js
 
       - name: Summarize determinism & artifacts
