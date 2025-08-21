@@ -8,7 +8,7 @@ function run(cmd, env = {}) {
   return execSync(cmd, {
     stdio: 'pipe',
     encoding: 'utf8',
-    env: { ...process.env, TZ: 'UTC', LC_ALL: 'C', LANG: 'C', ...env }
+    env: { ...process.env, TZ: 'UTC', LC_ALL: 'C', LANG: 'C', GITHUB_TOKEN: '', NOTION_TOKEN: '', SHIP_LOCAL_DIR: '', ...env }
   });
 }
 
