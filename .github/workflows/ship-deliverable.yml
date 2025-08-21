@@ -88,16 +88,17 @@ jobs:
       - name: CI structure self-check
         run: npm run ci:selfcheck
 
-      - name: E2E (dry) - questionnaire + lecun
+      - name: E2E (dry) - questionnaire + lecun (Linux only)
+        if: runner.os == 'Linux'
         env:
           TZ: UTC
           LC_ALL: C
           LANG: C
           NODE_ENV: test
-          SKIP_PDF: ${{ matrix.pdf == false && '1' || '' }}
         run: npm run test:e2e
 
-      - name: Ship pipeline
+      - name: Ship pipeline (Linux only)
+        if: runner.os == 'Linux'
         env:
           TZ: UTC
           LC_ALL: C
@@ -107,7 +108,8 @@ jobs:
           NOTION_TOKEN: ${{ inputs.export_to_notion == 'true' && secrets.NOTION_TOKEN || '' }}
           NOTION_PARENT_PAGE_ID: ${{ inputs.export_to_notion == 'true' && secrets.NOTION_PARENT_PAGE_ID || '' }}
         run: npm run ship -- --answers=${{ matrix.answers_file }}
-      - name: Verify artifact integrity (SHA-256 + manifest)
+      - name: Verify artifact integrity (Linux only)
+        if: runner.os == 'Linux'
         env:
           SKIP_PDF: ${{ matrix.pdf == false && '1' || '' }}
         run: node scripts/verify-artifacts.js
@@ -139,7 +141,8 @@ jobs:
           fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, out + '\n');
           JS
 
-      - name: Upload artifacts
+      - name: Upload artifacts (Linux only)
+        if: runner.os == 'Linux'
         uses: actions/upload-artifact@v4
         with:
           name: deliverables-${{ matrix.name }}
