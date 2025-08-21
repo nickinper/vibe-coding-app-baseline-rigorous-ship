@@ -1,6 +1,6 @@
 {
-  "trace_id": "awpnqm30",
-  "timestamp": "2025-08-21T03:15:13.756Z",
+  "trace_id": "p5intpir",
+  "timestamp": "2025-08-21T03:17:30.482Z",
   "env": {
     "node_version": "v20.12.2",
     "platform": "linux"
@@ -9,17 +9,17 @@
     "md": {
       "path": "outputs/generated-deliverable.md",
       "size": 1723,
-      "sha256": "6a35f6b72b6a3e77aa3c1ad94a78d9d90452a8ea9c4b6de271a345ea456438ff"
+      "sha256": "08757361b7bff154ee906f64c18a43cdd6a4e48eba618392297d912acfc33251"
     },
     "html": {
       "path": "outputs/generated-deliverable.html",
       "size": 2384,
-      "sha256": "d70bccf989b4f49469afa9b2f15c1c5a7a51c913bc46042754154277defbb535"
+      "sha256": "97102d10f6422d51bb6fb1ca4c1994f1c70cc6a444eb5420c5a11e846c8ae711"
     },
     "pdf": {
       "path": "outputs/generated-deliverable.pdf",
-      "size": 45248,
-      "sha256": "51bbd63755c953124b1d78d48b6c1515e3e8c2489d988837fec614f8732cfd0e"
+      "size": 45335,
+      "sha256": "719d9571a945df5721a27feaf982f425f6777ff000a2c7e57073a8c795e7845f"
     }
   },
   "template_selection": "auto via rules; see templates/report_*.md",
