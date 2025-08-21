@@ -1,3 +1,4 @@
+/AGENTS.md                                @nickinper
 /.github/workflows/ship-deliverable.yml @security-leads @devops-leads
 /scripts/verify-agent-policy.js          @security-leads
 /scripts/verify-artifacts.js             @devops-leads

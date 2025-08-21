@@ -16,8 +16,18 @@ const req = [
 ];
 
 const missing = req.filter(k => !yml.includes(k));
+const missingFiles = [];
+['AGENTS.md','tests/e2e.ship.test.mjs'].forEach(f => {
+  if (!fs.existsSync(f)) missingFiles.push(f);
+});
+
 if (missing.length) {
   console.error('CI SELF-CHECK ❌ Missing:\n - ' + missing.join('\n - '));
+  process.exit(1);
+}
+
+if (missingFiles.length) {
+  console.error('CI SELF-CHECK ❌ Missing files:\n - ' + missingFiles.join('\n - '));
   process.exit(1);
 }
 console.log('CI SELF-CHECK ✅ Structure OK');
