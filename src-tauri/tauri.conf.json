@@ -1,0 +1,106 @@
+{
+  "productName": "Vibe Coding App",
+  "version": "0.2.0",
+  "identifier": "com.vibecodingapp.desktop",
+  "build": {
+    "targets": "all",
+    "beforeDevCommand": "",
+    "beforeBuildCommand": "",
+    "devUrl": "http://localhost:3000",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Vibe Coding App - Enterprise Secure Desktop",
+        "width": 1200,
+        "height": 800,
+        "resizable": true,
+        "fullscreen": false,
+        "transparent": false,
+        "decorations": true,
+        "alwaysOnTop": false,
+        "skipTaskbar": false,
+        "center": true,
+        "minWidth": 800,
+        "minHeight": 600
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:;"
+    },
+    "macOSPrivateApi": false
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "DeveloperTool",
+    "copyright": "Copyright © 2025 Nicolas K. Perkins",
+    "shortDescription": "Enterprise Secure Deliverable Generator",
+    "longDescription": "Professional deliverable generator with LeCun-Rigor security standards for agent execution and enterprise-grade CI/CD.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "identifier": "com.vibecodingapp.desktop",
+    "resources": [],
+    "externalBin": [],
+    "publisher": "Nicolas K. Perkins",
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "active": true,
+      "dialog": true,
+      "pubkey": "",
+      "endpoints": []
+    },
+    "shell": {
+      "open": true,
+      "scope": [
+        {
+          "name": "npm-commands",
+          "cmd": "npm",
+          "args": [
+            "run",
+            { "validator": "^(start|ship|ci:selfcheck|test:e2e)$" }
+          ]
+        },
+        {
+          "name": "node-commands", 
+          "cmd": "node",
+          "args": [
+            { "validator": "^(cli/vibe-cli\\.js|scripts/ship\\.js|--version)$" }
+          ]
+        }
+      ]
+    },
+    "fs": {
+      "scope": [
+        {
+          "path": "$CWD",
+          "recursive": true
+        },
+        {
+          "path": "$CWD/outputs",
+          "recursive": true
+        },
+        {
+          "path": "$CWD/answers.json"
+        },
+        {
+          "path": "$CWD/answers.ci.json"
+        },
+        {
+          "path": "$CWD/package.json"
+        },
+        {
+          "path": "$CWD/AGENTS.md"
+        }
+      ]
+    }
+  }
+}
