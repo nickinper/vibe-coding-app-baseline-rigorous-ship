@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+if command -v node >/dev/null 2>&1; then
+  if [ -f "scripts/verify-agent-policy.js" ]; then
+    echo "🔎 verify-agent-policy.js"
+    node scripts/verify-agent-policy.js
+  fi
+else
+  echo "⚠ Node not found; skipping policy verification"
+fi

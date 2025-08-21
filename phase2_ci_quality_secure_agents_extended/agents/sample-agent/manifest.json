@@ -1,0 +1,23 @@
+{
+  "name": "sample-agent",
+  "version": "0.1.0",
+  "capabilities": {
+    "net": {
+      "deny_all_by_default": true,
+      "allow": []
+    },
+    "fs": {
+      "mode": "ro"
+    },
+    "exec": {
+      "whitelist": [
+        "node",
+        "bash"
+      ]
+    },
+    "llm": {
+      "providers": [],
+      "budget_tokens": 20000
+    }
+  }
+}

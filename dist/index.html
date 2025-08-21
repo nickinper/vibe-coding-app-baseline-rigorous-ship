@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibe Coding App - Enterprise Desktop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: #0d1117;
+            color: #f0f6fc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header h1 {
+            color: #f0f6fc;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-ok { background: #238636; color: #fff; }
+        .status-warning { background: #d29922; color: #000; }
+        .status-error { background: #da3633; color: #fff; }
+
+        .container {
+            flex: 1;
+            padding: 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .card h2 {
+            color: #f0f6fc;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .info-item {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 12px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #8b949e;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            color: #f0f6fc;
+            font-family: monospace;
+        }
+
+        .button {
+            background: #238636;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .button:hover {
+            background: #2ea043;
+        }
+
+        .button:disabled {
+            background: #484f58;
+            color: #8b949e;
+            cursor: not-allowed;
+        }
+
+        .button.secondary {
+            background: #21262d;
+            border: 1px solid #30363d;
+            color: #f0f6fc;
+        }
+
+        .button.secondary:hover {
+            background: #30363d;
+        }
+
+        .log-output {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 16px;
+            font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 16px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #30363d;
+            border-top: 2px solid #58a6ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .issues-list {
+            list-style: none;
+        }
+
+        .issues-list li {
+            padding: 8px 12px;
+            margin: 4px 0;
+            background: #fff8c5;
+            color: #000;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .issues-list li.error {
+            background: #ffeef0;
+            color: #d1242f;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 Vibe Coding App - Enterprise Desktop</h1>
+        <div id="statusBadge" class="status-badge status-ok">Ready</div>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>Environment Status</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Node.js Version</div>
+                    <div id="nodeVersion" class="info-value">Checking...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Workspace</div>
+                    <div id="workspaceStatus" class="info-value">Validating...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Dependencies</div>
+                    <div id="depsStatus" class="info-value">Checking...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Working Directory</div>
+                    <div id="workingDir" class="info-value">-</div>
+                </div>
+            </div>
+            <ul id="issuesList" class="issues-list hidden"></ul>
+            <button id="refreshBtn" class="button secondary">🔄 Refresh Status</button>
+        </div>
+
+        <div class="card">
+            <h2>Quick Actions</h2>
+            <button id="questionnaireBtn" class="button">📝 Run Questionnaire</button>
+            <button id="shipStandardBtn" class="button">🚢 Ship (Standard)</button>
+            <button id="shipEnterpriseBtn" class="button">🏢 Ship (Enterprise)</button>
+            <button id="selfCheckBtn" class="button secondary">✅ CI Self-Check</button>
+            <button id="openTerminalBtn" class="button secondary">💻 Open Terminal</button>
+        </div>
+
+        <div id="outputCard" class="card hidden">
+            <h2>
+                <span id="outputTitle">Output</span>
+                <span id="loadingSpinner" class="loading hidden"></span>
+            </h2>
+            <div id="logOutput" class="log-output"></div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

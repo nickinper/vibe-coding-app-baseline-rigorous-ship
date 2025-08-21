@@ -3,3 +3,6 @@
 /templates/*.md    @nickinper
 /.github/workflows/*.yml  @nickinper
 /scripts/*.js      @nickinper
+/AGENTS.md @nickinper
+/src-tauri/ @nickinper
+/desktop/ @nickinper
