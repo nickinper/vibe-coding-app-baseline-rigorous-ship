@@ -1,5 +1,5 @@
 # Enterprise Deliverable — technical due diligence
-owner: Core Platform Team • date: 2025-08-21 • trace: e04jd89s
+owner: Core Platform Team • date: 2025-08-21 • trace: cf7uoln2
 
 ## 1. intent & constraints
 - intent: Hardened, privacy-first system for enterprise workloads
