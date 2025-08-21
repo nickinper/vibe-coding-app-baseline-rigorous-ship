@@ -18,15 +18,28 @@ on:
     branches: [ main ]
 
 permissions:
-  contents: read
-concurrency:
-  group: ship-${{ github.ref }}
-  cancel-in-progress: true
+  contents: write    # needed to push 'deliverable' on non-PR runs
+  actions: read
+  checks: read
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
   ship:
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    concurrency:
+      group: ship-${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.name }}
+      cancel-in-progress: true
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest,  name: "standard-linux",     answers_file: "answers.ci.json",            export_to_github: false, pdf: true  }
+          - { os: ubuntu-latest,  name: "enterprise-linux",   answers_file: "answers.enterprise.ci.json",  export_to_github: true,  pdf: true  }
+          - { os: windows-latest, name: "standard-windows",   answers_file: "answers.ci.json",            export_to_github: false, pdf: false }
+          - { os: windows-latest, name: "enterprise-windows", answers_file: "answers.enterprise.ci.json",  export_to_github: false, pdf: false }
     env:
       GITHUB_OWNER: ${{ github.repository_owner }}
       GITHUB_REPO: ${{ github.event.repository.name }}
@@ -36,32 +49,129 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version-file: '.nvmrc'
           cache: 'npm'
+
+      # Headless Chromium/PDF deps (Linux only)
+      - name: Install system deps for headless browser (Linux only)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y --no-install-recommends \
+            ca-certificates fonts-liberation \
+            libasound2t64 libatk1.0-0t64 libatk-bridge2.0-0t64 \
+            libcairo2 libcups2 libdbus-1-3 libdrm2 libexpat1 \
+            libgbm1 libglib2.0-0 libgtk-3-0t64 libnspr4 libnss3 \
+            libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 \
+            libx11-6 libx11-xcb1 libxcb1 libxcomposite1 \
+            libxdamage1 libxext6 libxfixes3 libxkbcommon0 \
+            libxrandr2 libxshmfence1 libxss1 xdg-utils \
+            libfontconfig1 libatspi2.0-0
 
       - name: Prepare CI answers
         run: |
-          if [ ! -f answers.json ] && [ -f answers.ci.json ]; then
-            cp answers.ci.json answers.json
-            echo "✓ Using answers.ci.json for CI build"
+          if [ ! -f answers.json ] && [ -f "${{ matrix.answers_file }}" ]; then
+            cp "${{ matrix.answers_file }}" answers.json
+            echo "✓ Using ${{ matrix.answers_file }} for CI build (${{ matrix.name }})"
+          elif [ -f answers.json ]; then
+            echo "✓ Using existing answers.json"
+          else
+            echo "✗ No answers file found (missing both answers.json and ${{ matrix.answers_file }})"
+            exit 1
           fi
-      - name: Install deps
-        run: npm ci || npm install
-      - name: Ship pipeline
-        run: npm run ship
+
+      - name: Verify agent policies
+        run: node scripts/verify-agent-policy.js
+      - name: Install deps (ci)
+        run: npm ci --no-audit --no-fund
+
+      - name: CI structure self-check
+        run: npm run ci:selfcheck
+
+      - name: E2E (dry) - questionnaire + lecun (Linux only)
+        if: runner.os == 'Linux'
         env:
+          TZ: UTC
+          LC_ALL: C
+          LANG: C
+          NODE_ENV: test
+        run: npm run test:e2e
+
+      - name: Ship pipeline (Linux only)
+        if: runner.os == 'Linux'
+        env:
+          TZ: UTC
+          LC_ALL: C
+          LANG: C
+          NODE_ENV: production
+          GITHUB_TOKEN: ${{ matrix.export_to_github == true && (secrets.GITHUB_TOKEN || github.token) || '' }}
           NOTION_TOKEN: ${{ inputs.export_to_notion == 'true' && secrets.NOTION_TOKEN || '' }}
           NOTION_PARENT_PAGE_ID: ${{ inputs.export_to_notion == 'true' && secrets.NOTION_PARENT_PAGE_ID || '' }}
-      - name: Upload artifacts (21-day retention)
+        run: npm run ship -- --answers=${{ matrix.answers_file }}
+      - name: Verify artifact integrity (Linux only)
+        if: runner.os == 'Linux'
+        env:
+          SKIP_PDF: ${{ matrix.pdf == false && '1' || '' }}
+        run: node scripts/verify-artifacts.js
+
+      - name: Summarize determinism & artifacts
+        if: always()
+        run: |
+          node - <<'JS'
+          const fs = require('fs');
+          const crypto = require('crypto');
+          const p = 'outputs/manifest.json';
+          if (!fs.existsSync(p)) {
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `No manifest at ${p}\n`);
+            process.exit(0);
+          }
+          const m = JSON.parse(fs.readFileSync(p, 'utf8'));
+          const h = crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+          const kb = n => (n/1024).toFixed(1) + ' KiB';
+          const out = [
+            '### Determinism',
+            `- Manifest SHA-256: \`${h}\``,
+            `- Trace ID: \`${m.trace_id}\``,
+            '',
+            '### Artifacts',
+            `- MD: ${kb(m.artifacts.md.size)}`,
+            `- HTML: ${kb(m.artifacts.html.size)}`,
+            `- PDF: ${kb(m.artifacts.pdf.size)}`
+          ].join('\n');
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, out + '\n');
+          JS
+
+      - name: Upload artifacts (Linux only)
+        if: runner.os == 'Linux'
         uses: actions/upload-artifact@v4
         with:
-          name: deliverables
+          name: deliverables-${{ matrix.name }}
           path: |
             outputs/generated-deliverable.md
             outputs/generated-deliverable.html
             outputs/generated-deliverable.pdf
             outputs/manifest.json
-          retention-days: 21
-      - name: Export to GitHub branch (optional)
-        if: ${{ inputs.export_to_github == 'true' }}
-        run: node scripts/export-github.js outputs docs
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Export to deliverable branch (only on non-PR runs, Linux)
+        if: ${{ matrix.export_to_github == true && github.event_name != 'pull_request' && runner.os == 'Linux' }}
+        env:
+          GIT_AUTHOR_NAME: ci-bot
+          GIT_AUTHOR_EMAIL: ci-bot@example.com
+          GIT_COMMITTER_NAME: ci-bot
+          GIT_COMMITTER_EMAIL: ci-bot@example.com
+        run: |
+          set -euo pipefail
+          git fetch origin deliverable || true
+          git checkout -B deliverable
+          mkdir -p ./_dl
+          rsync -a --delete outputs/ ./_dl/outputs/
+          rsync -a .ship/ ./_dl/.ship/ || true
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "ci: export deliverable for ${{ matrix.name }} ($GITHUB_SHA)"
+            git push origin deliverable --force
+          else
+            echo "No changes to export."
+          fi

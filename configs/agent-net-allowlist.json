@@ -1,0 +1,15 @@
+{
+  "llm": {
+    "allowed_hosts": [],
+    "paid_tier_hosts": [
+      "api.anthropic.com",
+      "api.openai.com",
+      "api.mistral.ai",
+      "api.together.xyz"
+    ]
+  },
+  "net": {
+    "allowed_hosts": [],
+    "deny_all_by_default": true
+  }
+}

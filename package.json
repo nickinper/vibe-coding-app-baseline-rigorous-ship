@@ -19,7 +19,9 @@
     "export:notion": "node scripts/export-notion.js",
     "export:github": "node scripts/export-github.js outputs docs",
     "export:local": "node scripts/export-local.js ../export-target",
-    "ship": "node scripts/ship.js"
+    "ship": "node scripts/ship.js",
+    "ci:selfcheck": "node scripts/ci-selfcheck.js",
+    "test:e2e": "node --test tests/e2e.ship.test.mjs"
   },
   "engines": {
     "node": ">=18.0.0"

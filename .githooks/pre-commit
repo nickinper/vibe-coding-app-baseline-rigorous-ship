@@ -1,0 +1,31 @@
+#!/bin/sh
+# Pre-commit hook for agent policy verification
+# Ensures all agent manifests comply with security policies before commit
+
+echo "🔐 Running agent policy verification..."
+
+# Measure performance impact
+start_time=$(date +%s%3N)
+
+# Run agent policy verification
+if ! node scripts/verify-agent-policy.js; then
+    echo "❌ Agent policy verification failed"
+    echo "Please fix agent manifests or update policies before committing"
+    exit 1
+fi
+
+# Calculate performance metrics
+end_time=$(date +%s%3N)
+duration=$((end_time - start_time))
+
+echo "✅ Agent policy verification passed (${duration}ms)"
+
+# Optional: Check for sensitive data in staged files
+echo "🔍 Checking for sensitive data..."
+if git diff --cached --name-only | grep -E '\.(json|js|ts|yaml|yml)$' | xargs grep -l -E "(secret|password|token|key)" 2>/dev/null; then
+    echo "⚠️  Warning: Potential sensitive data detected in staged files"
+    echo "Please review files for secrets before committing"
+fi
+
+echo "✅ Pre-commit checks complete"
+exit 0

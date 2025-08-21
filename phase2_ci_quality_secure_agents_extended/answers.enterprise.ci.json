@@ -1,0 +1,15 @@
+{
+  "project_name": "Enterprise Deliverable",
+  "owner_name": "Core Platform Team",
+  "intent_one_liner": "Hardened, privacy-first system for enterprise workloads",
+  "audience": "Security & Platform Engineering",
+  "deliverables": "report,web,api",
+  "experience_level": "advanced",
+  "mode": "expert",
+  "team_size": "6",
+  "timeline_weeks": "12",
+  "region": "eu",
+  "contains_pii": "yes",
+  "payments": "yes",
+  "device_specs": "GitHub Actions (Linux)"
+}
