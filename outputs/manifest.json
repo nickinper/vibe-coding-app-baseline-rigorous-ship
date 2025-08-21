@@ -1,25 +1,25 @@
 {
-  "trace_id": "rwkhx2yi",
-  "timestamp": "2025-08-20T20:54:55.816Z",
+  "trace_id": "bnk6pg6r",
+  "timestamp": "2025-08-21T03:03:14.040Z",
   "env": {
-    "node_version": "v20.19.4",
+    "node_version": "v20.12.2",
     "platform": "linux"
   },
   "artifacts": {
     "md": {
       "path": "outputs/generated-deliverable.md",
       "size": 1586,
-      "sha256": "05bf06bbc4f45fb57ffae0fef62c2250bafde29e2f9cf2c39d872b99324ba6e7"
+      "sha256": "ce2fd293633925f72ca44b117c735cdbba8634063e684acc039935cfa1c5ae15"
     },
     "html": {
       "path": "outputs/generated-deliverable.html",
       "size": 2247,
-      "sha256": "3f603f3a7745ef7e99be6d54303617bfc858c2b8309148c87a45de16fe90fff4"
+      "sha256": "11fb5b06f2cddac52915de8aeacee954d853cf10eed61e6f2330a034ef93cf46"
     },
     "pdf": {
       "path": "outputs/generated-deliverable.pdf",
-      "size": 44814,
-      "sha256": "e05c9126cb0ac6bcd84469571496c24a528990d837356da28c834b7602439c80"
+      "size": 44815,
+      "sha256": "3ba797c6b1a0c032c6ae5fe91f5ee88c92115dc9d053c005aee9c8627ce235a1"
     }
   },
   "template_selection": "auto via rules; see templates/report_*.md",
