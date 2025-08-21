@@ -49,7 +49,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version-file: '.nvmrc'
           cache: 'npm'
 
       # Headless Chromium/PDF deps (Linux only)
@@ -104,6 +104,33 @@ jobs:
         run: npm run ship -- --answers=${{ matrix.answers_file }}
       - name: Verify artifact integrity (SHA-256 + manifest)
         run: node scripts/verify-artifacts.js
+
+      - name: Summarize determinism & artifacts
+        if: always()
+        run: |
+          node - <<'JS'
+          const fs = require('fs');
+          const crypto = require('crypto');
+          const p = 'outputs/manifest.json';
+          if (!fs.existsSync(p)) {
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `No manifest at ${p}\n`);
+            process.exit(0);
+          }
+          const m = JSON.parse(fs.readFileSync(p, 'utf8'));
+          const h = crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+          const kb = n => (n/1024).toFixed(1) + ' KiB';
+          const out = [
+            '### Determinism',
+            `- Manifest SHA-256: \`${h}\``,
+            `- Trace ID: \`${m.trace_id}\``,
+            '',
+            '### Artifacts',
+            `- MD: ${kb(m.artifacts.md.size)}`,
+            `- HTML: ${kb(m.artifacts.html.size)}`,
+            `- PDF: ${kb(m.artifacts.pdf.size)}`
+          ].join('\n');
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, out + '\n');
+          JS
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
