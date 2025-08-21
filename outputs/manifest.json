@@ -1,6 +1,6 @@
 {
-  "trace_id": "q7rfn93s",
-  "timestamp": "2025-08-21T03:13:25.168Z",
+  "trace_id": "awpnqm30",
+  "timestamp": "2025-08-21T03:15:13.756Z",
   "env": {
     "node_version": "v20.12.2",
     "platform": "linux"
@@ -9,17 +9,17 @@
     "md": {
       "path": "outputs/generated-deliverable.md",
       "size": 1723,
-      "sha256": "d063bd9b872983b67a9508c3d8307cb6a9b553a594bfc39f03cbe35bff34d206"
+      "sha256": "6a35f6b72b6a3e77aa3c1ad94a78d9d90452a8ea9c4b6de271a345ea456438ff"
     },
     "html": {
       "path": "outputs/generated-deliverable.html",
       "size": 2384,
-      "sha256": "7d7a85972796673aa1bb9e5f144851565c72486f3981d447b09ed19edc284f24"
+      "sha256": "d70bccf989b4f49469afa9b2f15c1c5a7a51c913bc46042754154277defbb535"
     },
     "pdf": {
       "path": "outputs/generated-deliverable.pdf",
-      "size": 45247,
-      "sha256": "8b9156be532a6bf2d5df473217d43ce5c26f2b7da9979fd30d22d1d905625389"
+      "size": 45248,
+      "sha256": "51bbd63755c953124b1d78d48b6c1515e3e8c2489d988837fec614f8732cfd0e"
     }
   },
   "template_selection": "auto via rules; see templates/report_*.md",
