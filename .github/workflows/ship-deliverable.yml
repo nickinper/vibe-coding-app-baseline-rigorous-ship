@@ -103,6 +103,7 @@ jobs:
           LC_ALL: C
           LANG: C
           NODE_ENV: production
+          GITHUB_TOKEN: ${{ matrix.export_to_github == true && (secrets.GITHUB_TOKEN || github.token) || '' }}
           NOTION_TOKEN: ${{ inputs.export_to_notion == 'true' && secrets.NOTION_TOKEN || '' }}
           NOTION_PARENT_PAGE_ID: ${{ inputs.export_to_notion == 'true' && secrets.NOTION_PARENT_PAGE_ID || '' }}
         run: npm run ship -- --answers=${{ matrix.answers_file }}
